@@ -13,7 +13,7 @@ http://jscolor.com/
 FastLED Palette Knife:
 http://fastled.io/tools/paletteknife/
 
-If you aren't familiar with how to setup your ESP8266, see the wiki on McLighting's git.  It's well written and should get you up and running.
+If you aren't familiar with how to setup your ESP8266, see the readme on McLighting's git.  It's well written and should get you up and running.
 
 In short you will:
 
