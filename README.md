@@ -26,7 +26,7 @@ In short you will:
 
 My work was all on adding FastLED (and other tweaks / animations) into the McLighting sketch instead of using Adafruit NeoPixel.
 
-I only a self taught coder who learns by a few books, google, and looking at other's code, 
+I am a self taught coder who learns by a few books, google, and looking at other's code, 
 and I just liked the things you can do in FastLED better, so I decided to tackle the 
 idea of integrating FastLED into toblum's already awesome work.
 
@@ -38,6 +38,8 @@ kept getting flickering until I incremented the WAIT_TIME up to 18us.
 If I disabled interrupts altogether "#define FASTLED_ALLOW_INTERRUPTS 0", the strip would stop flickering but I would get
 what I believe to be "watchdog resets" every 5 to 20 minutes depending on what animation was running, wifi traffic, etc...
 
+For reference, I learned more about the interrupts issue from here:  https://github.com/FastLED/FastLED/issues/306
+
 If anyone can shed more light on this I am all ears!  I'm not sure exactly what the implications are
 for setting the WAIT_TIME = 18us??  Everything appears to function properly, and so far I have not seen 
 a reset in a few hours.
@@ -47,7 +49,8 @@ spectrums using multiple color pickers via the web interface (instead of grindin
 and eventually animate them as well.  When I am finished with this project, I (we) will hopefully be able to build those
 spectrums, save them to the ESP8266 flash memory, and have a universal routine in the Arduino Sketch that can handle 
 the input / output of the spectrums to the strip (even running animations with them).  I also might even try making a web interface
-to create custom animations from, but that seems like a pretty decent challenge from what I can tell.
+to create custom animations from, but that seems like a pretty decent challenge from what I can tell. (I am just now finding my way 
+around in html/css/js so I have A LOT of learning to do!)
 
 I will say again, I'm a rookie who has tinkered around in a little of each major language with no formal education, so 
 if you see something that doesn't look right, it probably isn't!  I am very open to suggestions / learning anything 
