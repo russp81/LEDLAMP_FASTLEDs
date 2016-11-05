@@ -1,5 +1,5 @@
 # Russell's FASTLEDs
-I mixed the work of @toblum with the @FastLED (FastLED library 3.1.3 as of this writing), the colorjs colorpicker, and some additional strip animations (included in the Arduino Sketch above).
+I mixed the work of @toblum with the @FastLED (FastLED library 3.1.3 as of this writing), the colorjs colorpicker, color spectrums created via FastLED Palette Knife, and some additional strip animations (included in the Arduino Sketch above).
 
 FastLED 3.1.3 library:
 https://github.com/FastLED/FastLED
@@ -9,6 +9,9 @@ https://github.com/toblum/McLighting
 
 jscolor Color Picker:
 http://jscolor.com/
+
+FastLED Palette Knife:
+http://fastled.io/tools/paletteknife/
 
 If you aren't familiar with how to setup your ESP8266, see the wiki on McLighting's git.  It's well written and should get you up and running.
 
