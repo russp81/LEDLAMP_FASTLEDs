@@ -1,12 +1,15 @@
 # LEDLAMP_FASTLEDs
-Mixed McLighting's work with FASTLED, the colorjs colorpicker, and some additional strip animations
+I mixed McLighting's work with the FastLED library (3.1.3 as of this writing), the colorjs colorpicker, and some additional strip animations (included in the Arduino Sketch above).
+
+
+https://github.com/FastLED/FastLED
+https://github.com/toblum/McLighting
+http://jscolor.com/
+
+My work was all on adding FastLED (and other tweaks / animations) into the McLighting sketch instead of using Adafruit NeoPixel.
 
 The sketch is setup for a 240 pixel WS2812B GRB LED Strip.   
 (change the applicable options in "definitions.h" to your desire)
-
-Hardly any of this is my work other than integrating FastLED into 
-(https://github.com/toblum/McLighting) 
-instead of using Adafruit NeoPixel.
 
 I only a self taught programmer who learns by google and looking at other's code, 
 and I just liked the things you can do in FastLED better, so I decided to tackle the 
