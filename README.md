@@ -31,7 +31,7 @@ My work was all on adding FastLED (and other tweaks / animations) into the McLig
 
 I am a self taught coder who learns by a few books, google, and looking at other's code, 
 and I just liked the things you can do in FastLED better, so I decided to tackle the 
-idea of integrating FastLED into toblum's already awesome work.
+idea of integrating FastLED into the already awesome work of @toblum.
 
 I have a limited grasp on the h/w and s/w relationships (do's and don't do's, etc).  
 I edited clockless_esp8266.h (in the FastLED platforms folder) and 
