@@ -273,6 +273,18 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
         if (str_mode.startsWith("=comet")) {
           mode = COMET;
         }     
+        if (str_mode.startsWith("=fire")) {
+          mode = FIRE;
+        }   
+        if (str_mode.startsWith("=fworks")) {
+          mode = FIREWORKS;
+        }
+        if (str_mode.startsWith("=fwsingle")) {
+          mode = FIREWORKS_SINGLE;
+        }           
+        if (str_mode.startsWith("=fwrainbow")) {
+          mode = FIREWORKS_RAINBOW;
+        }           
         if (str_mode.startsWith("=theaterchase")) {
           mode = THEATERCHASE;
         }                   
