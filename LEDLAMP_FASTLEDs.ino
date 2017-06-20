@@ -20,6 +20,12 @@
 #include <WebSockets.h>           //https://github.com/Links2004/arduinoWebSockets
 #include <WebSocketsServer.h>
 
+// OTA
+#ifdef ENABLE_OTA
+  #include <WiFiUdp.h>
+  #include <ArduinoOTA.h>
+#endif
+
 
 // ***************************************************************************
 // Instanciate HTTP(80) / WebSockets(81) Server
@@ -53,10 +59,15 @@ void configModeCallback (WiFiManager *myWiFiManager) {
   DBG_OUTPUT_PORT.println(myWiFiManager->getConfigPortalSSID());
   //entered config mode, make led toggle faster
   ticker.attach(0.2, tick);
+
+  // Show USER that module can't connect to stored WiFi
+  uint16_t i;
+  for (i = 0; i < NUM_LEDS; i++) {
+    leds[i].setRGB(100, 0, 0);
+  }
+  FastLED.show(); 
+  
 }
-
-
-
 
 // ***************************************************************************
 // Include: Webserver
@@ -72,10 +83,6 @@ void configModeCallback (WiFiManager *myWiFiManager) {
 // Include: Color modes
 // ***************************************************************************
 #include "colormodes.h"
-
-
-
-
 
 // ***************************************************************************
 // MAIN
@@ -93,6 +100,8 @@ void setup() {
   pinMode(BUILTIN_LED, OUTPUT);
   // start ticker with 0.5 because we start in AP mode and try to connect
   ticker.attach(0.6, tick);
+
+  
 
   // ***************************************************************************
   // Setup: WiFiManager
@@ -127,6 +136,12 @@ void setup() {
   // Setup: FASTLED
   // ***************************************************************************
   delay(3000); // 3 second delay for recovery
+
+  // limit my draw to 2.1A at 5v of power draw
+  FastLED.setMaxPowerInVoltsAndMilliamps(5,maxCurrent);
+
+  // maximum refresh rate
+  FastLED.setMaxRefreshRate(fastled_hz);
   
   // tell FastLED about the LED strip configuration
   FastLED.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
@@ -135,14 +150,72 @@ void setup() {
   // set master brightness control
   FastLED.setBrightness(brightness);
 
+// ***************************************************************************
+  // Configure OTA
+  // ***************************************************************************
+  #ifdef ENABLE_OTA
+    DBG_OUTPUT_PORT.println("Arduino OTA activated.");
+    
+    // Port defaults to 8266
+    // ArduinoOTA.setPort(8266);
+  
+    // Hostname defaults to esp8266-[ChipID]
+    ArduinoOTA.setHostname(HOSTNAME);
+  
+    // No authentication by default
+    // ArduinoOTA.setPassword("admin");
+  
+    // Password can be set with it's md5 value as well
+    // MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
+    // ArduinoOTA.setPasswordHash("21232f297a57a5a743894a0e4a801fc3");
+  
+    ArduinoOTA.onStart([]() {
+      DBG_OUTPUT_PORT.println("Arduino OTA: Start updating");
+      ticker.attach(0.1, tick); // Do blink faster to show running OTA update
+    });
+    
+    ArduinoOTA.onEnd([]() {
+      DBG_OUTPUT_PORT.println("Arduino OTA: End");
+      ticker.detach();
+      //keep LED on
+      digitalWrite(BUILTIN_LED, LOW);
+    });
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+      DBG_OUTPUT_PORT.printf("Arduino OTA Progress: %u%%\r", (progress / (total / 100)));
+    });
+    
+    ArduinoOTA.onError([](ota_error_t error) {
+      DBG_OUTPUT_PORT.printf("Arduino OTA Error[%u]: ", error);
+      if (error == OTA_AUTH_ERROR) DBG_OUTPUT_PORT.println("Arduino OTA: Auth Failed");
+      else if (error == OTA_BEGIN_ERROR) DBG_OUTPUT_PORT.println("Arduino OTA: Begin Failed");
+      else if (error == OTA_CONNECT_ERROR) DBG_OUTPUT_PORT.println("Arduino OTA: Connect Failed");
+      else if (error == OTA_RECEIVE_ERROR) DBG_OUTPUT_PORT.println("Arduino OTA: Receive Failed");
+      else if (error == OTA_END_ERROR) DBG_OUTPUT_PORT.println("Arduino OTA: End Failed");
+    });
+  
+    ArduinoOTA.begin();
+    DBG_OUTPUT_PORT.println("");
+  #endif
+
 
   // ***************************************************************************
   // Setup: MDNS responder
   // ***************************************************************************
   MDNS.begin(HOSTNAME);
+  
   DBG_OUTPUT_PORT.print("Open http://");
-  DBG_OUTPUT_PORT.print(HOSTNAME);
-  DBG_OUTPUT_PORT.println(".local/edit to see the file browser");
+  DBG_OUTPUT_PORT.print(WiFi.localIP());
+  DBG_OUTPUT_PORT.println("/ to get LED controller interface.");
+  DBG_OUTPUT_PORT.println("");
+  DBG_OUTPUT_PORT.print("File editor is available at http://");
+  DBG_OUTPUT_PORT.print(WiFi.localIP());
+  DBG_OUTPUT_PORT.println("/edit");
+  DBG_OUTPUT_PORT.println("");
+  DBG_OUTPUT_PORT.println("New users:");
+  DBG_OUTPUT_PORT.print("Open http://");
+  DBG_OUTPUT_PORT.print(WiFi.localIP());
+  DBG_OUTPUT_PORT.println("/upload to upload the webpages first.");  
+
 
 
   // ***************************************************************************
@@ -295,7 +368,35 @@ void setup() {
     getStatusJSON();
   });
 
-  server.on("/sinelon", []() {
+server.on("/fire", []() {
+    exit_func = true;
+    mode = FIRE;
+    getArgs();
+    getStatusJSON();
+  });
+
+  server.on("/fworks", []() {
+    exit_func = true;
+    mode = FIREWORKS;
+    getArgs();
+    getStatusJSON();
+  });
+
+  server.on("/fwsingle", []() {
+    exit_func = true;
+    mode = FIREWORKS_SINGLE;
+    getArgs();
+    getStatusJSON();
+  });
+
+  server.on("/fwrainbow", []() {
+    exit_func = true;
+    mode = FIREWORKS_RAINBOW;
+    getArgs();
+    getStatusJSON();
+  });
+
+    server.on("/sinelon", []() {
     exit_func = true;
     mode = SINELON;
     getArgs();
@@ -334,9 +435,13 @@ void setup() {
 }
 
 void loop() {
+  #ifdef ENABLE_OTA
+    ArduinoOTA.handle();
+  #endif
+  
   server.handleClient();
   webSocket.loop();
-//  ArduinoOTA.handle();
+    
 //  yield();
   
   EVERY_N_MILLISECONDS(int(float(1000/FPS)))  { gHue++; } // slowly cycle the "base color" through the rainbow
@@ -383,6 +488,23 @@ void loop() {
   if (mode == SINELON) {
     sinelon();
   }
+
+if (mode == FIRE) {
+    fire2012();
+  }
+
+  if (mode == FIREWORKS) {
+    fireworks();
+  }
+
+  if (mode == FIREWORKS_SINGLE) {
+    fw_single();
+  }
+
+  if (mode == FIREWORKS_RAINBOW) {
+    fw_rainbow();
+  }
+
   
   if (mode == JUGGLE) {
     juggle();
