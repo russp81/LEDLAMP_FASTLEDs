@@ -1,5 +1,5 @@
 # doctormord's FASTLEDs
-I mixed the work of McLighting and Russell with FastLED (FastLED library 3.1.3 as of this writing), the colorjs colorpicker, color spectrums created via FastLED Palette Knife, and some additional strip animations (included in the Arduino Sketch above).
+I mixed the work of [McLighting](https://github.com/toblum/McLighting) and [Russell](https://github.com/russp81/LEDLAMP_FASTLEDs) with [FastLED](https://github.com/FastLED/FastLED) (FastLED library 3.1.3 as of this writing), the colorjs colorpicker, color spectrums created via FastLED Palette Knife, and some additional strip animations (included in the Arduino Sketch above).
 
 FastLED 3.1.3 library:
 https://github.com/FastLED/FastLED
@@ -29,9 +29,7 @@ In short you will:
     of the ESP followed by "/edit" (i.e. 192.168.1.20/edit).  Then upload the files from the folder labeled "upload these" from this         repo. 
 5.  Once you have finished uploading, type in the IP of the ESP into your browser and you should be up and running!
 
-Forked from Russel,
-
-i removed Adafruit Neopixel references and library calls.
+Forked from Russel, i removed Adafruit Neopixel references and library calls.
 
 Added/changed so far:
 
@@ -41,8 +39,8 @@ Added/changed so far:
 * integrated Arduino OTA 
 
 
--I edited clockless_esp8266.h (in the FastLED platforms folder) and 
+~~I edited clockless_esp8266.h (in the FastLED platforms folder) and 
 kept getting flickering until I incremented the WAIT_TIME up to 18us. 
-(also I did "#define FASTLED_INTERRUPT_RETRY_COUNT 3" inside my sketch).-
+(also I did "#define FASTLED_INTERRUPT_RETRY_COUNT 3" inside my sketch).~~
 
 For reference, interrupts issue:  https://github.com/FastLED/FastLED/issues/306
