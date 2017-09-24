@@ -1,4 +1,9 @@
-# doctormord's FASTLEDs
+# doctormord's FASTLEDs - OBSOLETE!
+
+Please check new Mix at:
+
+
+
 I mixed the work of [McLighting](https://github.com/toblum/McLighting) and [Russell](https://github.com/russp81/LEDLAMP_FASTLEDs) with [FastLED](https://github.com/FastLED/FastLED) (FastLED library 3.1.3 as of this writing), the colorjs colorpicker, color spectrums created via FastLED Palette Knife, and some additional strip animations (included in the Arduino Sketch above).
 
 FastLED 3.1.3 library:
