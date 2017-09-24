@@ -1,6 +1,8 @@
 # doctormord's FASTLEDs - OBSOLETE!
 
-Please check new Mix at:
+Please check new repo at:
+
+https://github.com/doctormord/Responsive_LED_Control
 
 
 
